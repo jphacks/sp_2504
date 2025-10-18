@@ -1,13 +1,15 @@
+import { fromAPIDTO } from "@/server/hotpepper/fromAPIDTO";
+import { HotpepperServer } from "@/server/hotpepper/HotpepperServer";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     //クエリパラメータから、lat,lng,radius,budget,genreを取得する
     const searchParams = request.nextUrl.searchParams
-    const lat = 43.07 //searchParams.get("lat")
-    const lng = 141.34 //searchParams.get("lng")
-    const range = 5 //searchParams.get("range")
-    const genre = "G004,G013" //searchParams.get("genre")
-    const budget = "B011" //searchParams.get("budget")
+    const lat = searchParams.get("lat")
+    const lng = searchParams.get("lng")
+    const range = searchParams.get("range")
+    const genre = searchParams.get("genre")
+    const budget = searchParams.get("budget")
     const order = 4 //人気順
     const start = 1 //ランダムにする
     const count = 100 //一旦
@@ -21,9 +23,12 @@ export async function GET(request: NextRequest) {
         if(!res.ok){ //HTTPステータスコードが200のときres.ok = trueで正常にやり取りできたことを示す。それ以外の時はエラーが書かれたjsonを返す
             return NextResponse.json({error: "Failed to fetch hot pepper API"}, {status: res.status})
         }
-        const data = await res.json(); //HTTPレスポンスオブジェクトのボディ部分をJSONとして切り出す
-        //console.log(data);
-        return NextResponse.json(data); //最終的に返すJSONレスポンスを作るところ
+        const data = await res.json() as fromAPIDTO; //HTTPレスポンスオブジェクトのボディ部分をJSONとして切り出す
+        //ここでdataを成型！！！
+        const hotpepperserver : HotpepperServer = HotpepperServer.fromAPIDTO(data);
+        //ここで候補を絞る！頑張れ、DBに保存されている投票結果から取得して読み込む感じかなあ
+        
+        return NextResponse.json(hotpepperserver.toClientDTO()); //最終的に返すJSONレスポンスを作るところ
     }
     catch (error){ //ネットワークエラーや構文エラーをひろう。500番台のステータスコードでサーバー関連のエラーであることを通知する。
         return NextResponse.json({error: 'Unexpected error occurred'}, {status: 500})
