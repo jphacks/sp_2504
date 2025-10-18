@@ -4,9 +4,9 @@ export interface fromAPIDTO {
 
 export interface Results {
     api_version:       string;
-    results_available: number;
+    results_available: string;
     results_returned:  string;
-    results_start:     number;
+    results_start:     string;
     shop:              Shop[];
 }
 
@@ -23,20 +23,20 @@ export interface Shop {
     large_area:         Area;
     middle_area:        Area;
     small_area:         Area;
-    lat:                number;
-    lng:                number;
+    lat:                string;
+    lng:                string;
     genre:              Genre;
     sub_genre:          SubGenre;
     budget:             Budget;
     catch:              string;
-    capacity:           number;
+    capacity:           string;
     access:             string;
     mobile_access:      string;
     urls:               Urls;
     photo:              Photo;
     open:               string;
     close:              string;
-    party_capacity:     number;
+    party_capacity:     string;
     other_memo:         string;
     shop_detail_memo:   string;
     budget_memo:        string;

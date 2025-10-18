@@ -4,8 +4,11 @@ export interface ServerShop {
     location: Location
     genre: GenreType
     openighours: Openinghours
+    openinghoursstring: string
     bugdet: BudgetRange
     comment: string
+    url: string
+    photo: string
 }
 export interface Location {
     latitude: number
@@ -77,8 +80,11 @@ export type Openinghours = {
 export class BudgetRange{
     private readonly min :number
     private readonly max :number
-    private constructor(min: number, max: number){
+    constructor(min: number, max: number){
         this.min = min
         this.max = max
+    }
+    public toStringForClient(): string{
+        return "500~1000円"
     }
 }
