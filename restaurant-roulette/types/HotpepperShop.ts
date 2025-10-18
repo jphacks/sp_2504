@@ -19,7 +19,7 @@ export type BudgetCode =
   | "B009" | "B010" | "B011" | "B001" | "B002"
   | "B003" | "B008" | "B004" | "B005" | "B006"
   | "B012" | "B013" | "B014"; 
-export const BudgetMap: Record<string, string> = {
+export const BudgetMap: Record<BudgetCode, string> = {
   B009: "～500円",
   B010: "501～1000円",
   B011: "1001～1500円",
@@ -59,3 +59,11 @@ export const GenreLabels: Record<GenreCode, string> = {
   G014: "カフェ・スイーツ",
   G015: "その他グルメ",
 };
+
+export const RangeMap: Record<number, string> = {
+  1: "300m",
+  2: "500m",
+  3: "1000m",
+  4: "2000m",
+  5: "3000m"
+}
