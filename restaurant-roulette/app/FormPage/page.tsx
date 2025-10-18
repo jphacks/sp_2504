@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -9,13 +9,15 @@ import { Header } from "../../components/layout/Header";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
 import { Checkbox } from "../../components/ui/checkbox";
 
-export default function HomePage() {
+export default function FormPage() {
     const router = useRouter();
     const [isShareOpen, setIsShareOpen] = useState(false);
     const [shareUrl, setShareUrl] = useState("");
     const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+    const [radius, setRadius] = useState("1000");
+    const [budget, setBudget] = useState("under-1000");
 
-    // 共有ボタンを押したとき
+    // --- 共有ボタン ---
     const handleShare = () => {
         const uuid = crypto.randomUUID();
         const url = `${window.location.origin}/share?id=${uuid}`;
@@ -23,35 +25,56 @@ export default function HomePage() {
         setIsShareOpen(true);
     };
 
-    // LINE共有
+    // --- LINE共有 ---
     const shareToLINE = () => {
         const text = encodeURIComponent("一緒にお店を決めよう！");
         const url = encodeURIComponent(shareUrl);
         window.open(`https://line.me/R/msg/text/?${text}%0A${url}`, "_blank");
     };
 
-    // X共有
+    // --- X共有 ---
     const shareToX = () => {
         const text = encodeURIComponent("一緒にお店を選ぼう！");
         const url = encodeURIComponent(shareUrl);
         window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank");
     };
 
-    // URLコピー
+    // --- URLコピー ---
     const copyToClipboard = async () => {
         await navigator.clipboard.writeText(shareUrl);
         alert("URLをコピーしました！");
     };
 
-    // キーワードリスト
+    // --- キーワードリスト ---
     const keywordOptions = ["ラーメン", "寿司", "焼肉", "イタリアン", "居酒屋"];
 
-    // 選択トグル
-    const toggleKeyword = (keyword: string) => {
-        setSelectedKeywords((prev) =>
-            prev.includes(keyword)
-                ? prev.filter((k) => k !== keyword)
-                : [...prev, keyword]
+    // --- 現在地取得 → API呼び出し ---
+    const handleSearch = async () => {
+        if (!navigator.geolocation) {
+            alert("このブラウザでは位置情報が利用できません。");
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+
+                // URLクエリパラメータを作成
+                const query = new URLSearchParams({
+                    lat: latitude.toString(),
+                    lng: longitude.toString(),
+                    range: RangeMap[radius],
+                    budget: BudgetMap[budget],
+                    genre: selectedKeywords.join(","), // キーワードをカンマ区切りで
+                });
+
+                // 検索結果ページにクエリを付けて遷移
+                router.push(`/PackAnimation?${query.toString()}`);
+            },
+            (error) => {
+                console.error(error);
+                alert("位置情報を取得できませんでした。");
+            }
         );
     };
 
@@ -59,16 +82,14 @@ export default function HomePage() {
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-pink-50 via-orange-50 to-yellow-50">
             <Header />
 
-            {/* Main Content */}
             <main className="flex-1 flex items-center justify-center px-4 pb-20">
                 <div className="w-full max-w-md">
-                    {/* Search Card */}
                     <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
                         <CardContent className="pt-8 pb-8 px-6 space-y-5">
                             {/* Search Radius */}
                             <div className="space-y-2">
                                 <label className="text-sm text-muted-foreground">Search Radius</label>
-                                <Select defaultValue="1000">
+                                <Select defaultValue="1000" onValueChange={setRadius}>
                                     <SelectTrigger className="w-full bg-input-background border-border/50 rounded-xl h-12">
                                         <SelectValue placeholder="Select radius" />
                                     </SelectTrigger>
@@ -87,7 +108,7 @@ export default function HomePage() {
                             {/* Budget */}
                             <div className="space-y-2">
                                 <label className="text-sm text-muted-foreground">Budget</label>
-                                <Select defaultValue="under-1000">
+                                <Select defaultValue="under-1000" onValueChange={setBudget}>
                                     <SelectTrigger className="w-full bg-input-background border-border/50 rounded-xl h-12">
                                         <SelectValue placeholder="Select budget" />
                                     </SelectTrigger>
@@ -103,26 +124,20 @@ export default function HomePage() {
                                 </Select>
                             </div>
 
-                            {/* Keyword Multi Select */}
+                            {/* Keywords */}
                             <div className="space-y-2">
                                 <label className="text-sm text-muted-foreground">Key Word</label>
-
-                                {/* おまかせを選ぶチェックボックス */}
                                 <div className="flex items-center space-x-2 py-1">
                                     <Checkbox
                                         id="おまかせ"
-                                        checked={selectedKeywords.length === 0} // 他が選ばれていなければON
-                                        onCheckedChange={() => setSelectedKeywords([])} // 全解除
+                                        checked={selectedKeywords.length === 0}
+                                        onCheckedChange={() => setSelectedKeywords([])}
                                     />
-                                    <label
-                                        htmlFor="おまかせ"
-                                        className="text-sm leading-none peer-disabled:cursor-not-allowed"
-                                    >
+                                    <label htmlFor="おまかせ" className="text-sm leading-none">
                                         おまかせ
                                     </label>
                                 </div>
 
-                                {/* 通常のキーワードを複数選択可能に */}
                                 {keywordOptions.map((keyword) => (
                                     <div key={keyword} className="flex items-center space-x-2 py-1">
                                         <Checkbox
@@ -136,16 +151,12 @@ export default function HomePage() {
                                                 );
                                             }}
                                         />
-                                        <label
-                                            htmlFor={keyword}
-                                            className="text-sm leading-none peer-disabled:cursor-not-allowed"
-                                        >
+                                        <label htmlFor={keyword} className="text-sm leading-none">
                                             {keyword}
                                         </label>
                                     </div>
                                 ))}
                             </div>
-
                         </CardContent>
                     </Card>
 
@@ -153,7 +164,7 @@ export default function HomePage() {
                     <div className="mt-8 space-y-3">
                         <Button
                             className="w-full h-14 rounded-2xl bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500 hover:from-orange-500 hover:via-pink-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
-                            onClick={() => router.push("/PackAnimation")}
+                            onClick={handleSearch}
                         >
                             条件に合うお店を取得
                         </Button>
@@ -169,7 +180,6 @@ export default function HomePage() {
                 </div>
             </main>
 
-            {/* Footer */}
             <footer className="py-6 px-4 text-center">
                 <p className="text-sm text-muted-foreground">Powered by Hot Pepper API</p>
             </footer>
