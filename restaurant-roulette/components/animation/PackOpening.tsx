@@ -64,10 +64,6 @@ export default function ShopPackOpening() {
         setTimeout(() => setStage("revealing"), 2000)
     }
 
-    const handleReset = () => {
-        setStage("initial")
-    }
-
     return (
         <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-4 bg-gradient-to-br from-blue-900 via-purple-900 to-blue-900">
 
@@ -146,7 +142,7 @@ export default function ShopPackOpening() {
                     </motion.div>
                 )}
 
-                {stage === "revealing" && <ShopReveal cards={shops} onReset={handleReset} />}
+                {stage === "revealing" && <ShopReveal cards={shops} />}
             </AnimatePresence>
         </div>
     )
