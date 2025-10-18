@@ -1,7 +1,6 @@
 import { HotpepperShop } from "@/types/HotpepperShop";
 import { fromAPIDTO, Shop } from "./fromAPIDTO";
 import { BudgetRange, GenreType, Openinghours, ServerShop, Time } from "./ServerShop";
-import { create } from "domain";
 
 export class HotpepperServer {
     //フェッチしてきたデータを店舗ごとの型として保持
