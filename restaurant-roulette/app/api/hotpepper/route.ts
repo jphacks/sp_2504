@@ -1,3 +1,5 @@
+//app/api/hotpepper/route.ts
+
 import { shuffle } from "@/models/shuffle";
 import { fromAPIDTO } from "@/server/hotpepper/fromAPIDTO";
 import { HotpepperServer } from "@/server/hotpepper/HotpepperServer";
@@ -19,25 +21,25 @@ export async function GET(request: NextRequest) {
     const apiKey = process.env.HOTPEPPER_API_KEY
     const url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${apiKey}&lat=${lat}&lng=${lng}&range=${range}&genre=${genre}&budget=${budget}&order=${order}&start=${start}&format=${format}&count=${count}`
 
-    try{
+    try {
         const res = await fetch(url) //サーバーサイドで安全にfetch。fetchはURLから情報を取ってくる処理。返ってきているのはHTTPレスポンスオブジェクトらしい
-        if(!res.ok){ //HTTPステータスコードが200のときres.ok = trueで正常にやり取りできたことを示す。それ以外の時はエラーが書かれたjsonを返す
-            return NextResponse.json({error: "Failed to fetch hot pepper API"}, {status: res.status})
+        if (!res.ok) { //HTTPステータスコードが200のときres.ok = trueで正常にやり取りできたことを示す。それ以外の時はエラーが書かれたjsonを返す
+            return NextResponse.json({ error: "Failed to fetch hot pepper API" }, { status: res.status })
         }
         const data = await res.json() as fromAPIDTO; //HTTPレスポンスオブジェクトのボディ部分をJSONとして切り出す
 
-        const hotpepperserver : HotpepperServer = HotpepperServer.fromAPIDTO(data);
+        const hotpepperserver: HotpepperServer = HotpepperServer.fromAPIDTO(data);
 
         //ここで候補を絞る！頑張れ、DBに保存されている投票結果から取得して読み込む感じかなあ
         //openighoursで絞る。(できれば...)
 
         //条件に適合した候補が10より多かったら、ランダムに取得する
         const dto = hotpepperserver.toClientDTO();
-        const limitedDto = dto.length > 10 ? shuffle(dto).slice(0,10) : dto;
+        const limitedDto = dto.length > 10 ? shuffle(dto).slice(0, 10) : dto;
         return NextResponse.json(limitedDto); //最終的に返すJSONレスポンスを作るところ
     }
-    catch (error){ //ネットワークエラーや構文エラーをひろう。500番台のステータスコードでサーバー関連のエラーであることを通知する。
+    catch (error) { //ネットワークエラーや構文エラーをひろう。500番台のステータスコードでサーバー関連のエラーであることを通知する。
         console.error("Fetch or transform error:", error);
-        return NextResponse.json({error: 'Unexpected error occurred'}, {status: 500})
+        return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 })
     }
 }

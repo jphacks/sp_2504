@@ -1,3 +1,5 @@
+//PackOpening.tsx
+
 "use client"
 
 import { useState, useEffect } from "react"
@@ -5,47 +7,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Sparkles } from "lucide-react"
 import { Button } from "../../components/ui/button"
 import ShopReveal from "../../components/animation/ShopReveal"
-import { Shop } from "../../components/ShopCard"
+import { HotpepperShop } from "../../types/HotpepperShop"
 
-const SAMPLE_SHOPS: Shop[] = [
-    {
-        name: "とんかつ田中",
-        address: "東京都渋谷区道玄坂2-10-12",
-        genre: "和食",
-        distance: "500m",
-        budget: "〜1000円",
-        open: "11:00〜22:00",
-        comment: "サクサクのとんかつが自慢！ランチタイムはご飯おかわり自由です。",
-        url: "https://example.com/tonkatsu-tanaka",
-        photo: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    },
-    {
-        name: "カフェ・ド・パリ",
-        address: "東京都新宿区新宿3-15-8",
-        genre: "カフェ",
-        distance: "800m",
-        budget: "1000円〜2000円",
-        open: "9:00〜23:00",
-        comment: "落ち着いた雰囲気で、こだわりのコーヒーとスイーツが楽しめます。",
-        url: "https://example.com/cafe-de-paris",
-        photo: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    },
-    {
-        name: "麺屋 龍",
-        address: "東京都豊島区池袋2-5-3",
-        genre: "ラーメン",
-        distance: "1.2km",
-        budget: "〜1000円",
-        open: "11:00〜翌3:00",
-        comment: "濃厚な豚骨スープが絶品！深夜まで営業しているので飲み会帰りにもぴったり。",
-        url: "https://example.com/menya-ryu",
-        photo: "https://images.unsplash.com/photo-1623341214825-9f4f963727da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    },
-]
-
-export default function ShopPackOpening() {
+export default function ShopPackOpening({ initialshops }: []HotpepperShop) {
     const [stage, setStage] = useState<"initial" | "opening" | "revealing">("initial")
-    const [shops] = useState(SAMPLE_SHOPS)
+    const [shops] = useState(initialshop)
 
     // パーティクル座標
     const [particlePositions, setParticlePositions] = useState<{ x: number, y: number }[]>([])

@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LotteryBox } from "../../components/animation/LotteryBox"
-import { Shop, ShopCard } from "../../components/ShopCard";
+import { LotteryBox } from "../../components/animation/LotteryBox";
+import { ShopCard } from "../../components/ShopCard";
+import { HotpepperShop } from "../../types/HotpepperShop";
 
 interface CardLotteryProps {
-    shops: Shop[];
+    shops: HotpepperShop[];
     votes: number[];
 }
 
@@ -15,11 +16,11 @@ type AnimationState = "inserting" | "shuffling" | "opening" | "drawing" | "revea
 export function CardLottery({ shops, votes }: CardLotteryProps) {
     const [animationState, setAnimationState] = useState<AnimationState>("inserting");
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
-    const [drawnShop, setDrawnShop] = useState<Shop | null>(null);
-    const [shopsInBox, setShopsInBox] = useState<Shop[]>([]);
+    const [drawnShop, setDrawnShop] = useState<HotpepperShop | null>(null);
+    const [shopsInBox, setShopsInBox] = useState<HotpepperShop[]>([]);
 
     /** 重み付き抽選 */
-    const weightedRandomDraw = (shops: Shop[], votes: number[]): Shop => {
+    const weightedRandomDraw = (shops: HotpepperShop[], votes: number[]): HotpepperShop => {
         const totalVotes = votes.reduce((sum, v) => sum + v, 0);
         if (totalVotes === 0) return shops[Math.floor(Math.random() * shops.length)];
 
