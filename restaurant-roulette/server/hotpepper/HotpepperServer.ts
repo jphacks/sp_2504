@@ -3,8 +3,10 @@
 import { HotpepperShop } from "@/types/HotpepperShop";
 import { fromAPIDTO, Shop } from "./fromAPIDTO";
 import { BudgetRange, GenreType, Openinghours, ServerShop, Time } from "./ServerShop";
+import { getDistance } from "geolib";
 
 export class HotpepperServer {
+    private readonly geolibAccuracy = 10;
     //フェッチしてきたデータを店舗ごとの型として保持
     private constructor(
         private shops: ServerShop[]
@@ -39,12 +41,12 @@ export class HotpepperServer {
             Sunday: { open: new Time(1, 0), close: new Time(23, 0) }
         };
     }
-    public toClientDTO(): HotpepperShop[] {
+    public toClientDTO(myLat: number, myLng: number): HotpepperShop[] {
         return this.shops.map((rawShop): HotpepperShop => ({
             name: rawShop.name,
             address: rawShop.address,
             genre: rawShop.genre.toString(),
-            distance: "1000m",
+            distance: getDistance({latitude: myLat, longitude: myLng}, {latitude: rawShop.location.latitude, longitude: rawShop.location.longitude}, this.geolibAccuracy).toString(),
             budget: rawShop.bugdet.toStringForClient(),
             open: rawShop.openinghoursstring,
             comment: rawShop.comment,
