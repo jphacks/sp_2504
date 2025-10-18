@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(hotpepperserver.toClientDTO()); //最終的に返すJSONレスポンスを作るところ
     }
     catch (error){ //ネットワークエラーや構文エラーをひろう。500番台のステータスコードでサーバー関連のエラーであることを通知する。
+        console.error("Fetch or transform error:", error);
         return NextResponse.json({error: 'Unexpected error occurred'}, {status: 500})
     }
 }
