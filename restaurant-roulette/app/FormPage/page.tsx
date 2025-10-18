@@ -1,3 +1,5 @@
+//app/FormPage/page.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -175,7 +177,7 @@ export default function FormPage() {
                         <Button
                             variant="outline"
                             className="w-full h-14 rounded-2xl border-pink-500 text-pink-600 hover:bg-pink-50"
-                            onClick={() => router.push("/PackAnimation")}
+                            onClick={handleSearch}
                         >
                             友達と共有
                         </Button>

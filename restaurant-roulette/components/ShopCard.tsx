@@ -3,18 +3,7 @@
 import { ImageWithFallback } from "./image/ImageWithFallback";
 import { Badge } from "./ui/badge";
 import { MapPin, ExternalLink, Clock, DollarSign, Navigation } from "lucide-react";
-
-export interface Shop {
-    name: string;         // 店舗名
-    address: string;      // 住所
-    genre: string;        // ジャンル名
-    distance: string;     // 距離（例: "500m"）
-    budget: string;       // 予算（例: "〜1000円"）
-    open: string | null;  // 営業時間（例: "11:00〜22:00"）
-    comment: string;      // コメントや紹介文
-    url: string;          // 店舗ページURL
-    photo: string;        // 画像URL
-}
+import { HotpepperShop } from "../types/HotpepperShop";
 
 export function ShopCard({
     name,
@@ -26,7 +15,9 @@ export function ShopCard({
     comment,
     url,
     photo,
-}: Shop) {
+    lat,
+    lng
+}: HotpepperShop) {
     const genreColors: Record<string, string> = {
         和食: "bg-red-500",
         洋食: "bg-blue-500",
@@ -122,12 +113,12 @@ export function ShopCard({
                 <div className="space-y-1 text-xs pt-2 border-t border-yellow-300">
                     <div className="flex justify-between items-center">
                         <Badge className="bg-yellow-500 text-white px-2 py-0.5 text-xs">
-                            ウルトラレア
+                            レア
                         </Badge>
                         <button
                             onClick={() =>
                                 window.open(
-                                    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`,
+                                    `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
                                     "_blank"
                                 )
                             }
