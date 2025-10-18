@@ -8,14 +8,26 @@ import { Button } from "../../components/ui/button";
 import { Header } from "../../components/layout/Header";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
 import { Checkbox } from "../../components/ui/checkbox";
+import { BudgetMap, GenreLabels, GenreCode } from "../../types/HotpepperShop";
+
+// --- 検索範囲マップ ---
+const RangeMap: Record<string, string> = {
+    "500": "1",
+    "800": "2",
+    "1000": "3",
+    "1500": "4",
+    "2000": "5",
+    "3000": "6",
+    "4000": "7",
+};
 
 export default function FormPage() {
     const router = useRouter();
     const [isShareOpen, setIsShareOpen] = useState(false);
     const [shareUrl, setShareUrl] = useState("");
-    const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+    const [selectedGenres, setSelectedGenres] = useState<GenreCode[]>([]);
     const [radius, setRadius] = useState("1000");
-    const [budget, setBudget] = useState("under-1000");
+    const [budget, setBudget] = useState<keyof typeof BudgetMap>("B010"); // 501〜1000円
 
     // --- 共有ボタン ---
     const handleShare = () => {
@@ -25,30 +37,25 @@ export default function FormPage() {
         setIsShareOpen(true);
     };
 
-    // --- LINE共有 ---
+    // --- 共有関連関数 ---
     const shareToLINE = () => {
         const text = encodeURIComponent("一緒にお店を決めよう！");
         const url = encodeURIComponent(shareUrl);
         window.open(`https://line.me/R/msg/text/?${text}%0A${url}`, "_blank");
     };
 
-    // --- X共有 ---
     const shareToX = () => {
         const text = encodeURIComponent("一緒にお店を選ぼう！");
         const url = encodeURIComponent(shareUrl);
         window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank");
     };
 
-    // --- URLコピー ---
     const copyToClipboard = async () => {
         await navigator.clipboard.writeText(shareUrl);
         alert("URLをコピーしました！");
     };
 
-    // --- キーワードリスト ---
-    const keywordOptions = ["ラーメン", "寿司", "焼肉", "イタリアン", "居酒屋"];
-
-    // --- 現在地取得 → API呼び出し ---
+    // --- 検索処理 ---
     const handleSearch = async () => {
         if (!navigator.geolocation) {
             alert("このブラウザでは位置情報が利用できません。");
@@ -59,16 +66,14 @@ export default function FormPage() {
             (position) => {
                 const { latitude, longitude } = position.coords;
 
-                // URLクエリパラメータを作成
                 const query = new URLSearchParams({
                     lat: latitude.toString(),
                     lng: longitude.toString(),
                     range: RangeMap[radius],
-                    budget: BudgetMap[budget],
-                    genre: selectedKeywords.join(","), // キーワードをカンマ区切りで
+                    budget,
+                    genre: selectedGenres.join(","),
                 });
 
-                // 検索結果ページにクエリを付けて遷移
                 router.push(`/PackAnimation?${query.toString()}`);
             },
             (error) => {
@@ -86,73 +91,71 @@ export default function FormPage() {
                 <div className="w-full max-w-md">
                     <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
                         <CardContent className="pt-8 pb-8 px-6 space-y-5">
-                            {/* Search Radius */}
+
+                            {/* --- 検索範囲 --- */}
                             <div className="space-y-2">
-                                <label className="text-sm text-muted-foreground">Search Radius</label>
-                                <Select defaultValue="1000" onValueChange={setRadius}>
-                                    <SelectTrigger className="w-full bg-input-background border-border/50 rounded-xl h-12">
+                                <label className="text-sm text-muted-foreground">検索半径</label>
+                                <Select value={radius} onValueChange={setRadius}>
+                                    <SelectTrigger className="w-full rounded-xl h-12">
                                         <SelectValue placeholder="Select radius" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="500">300m</SelectItem>
-                                        <SelectItem value="800">500m</SelectItem>
-                                        <SelectItem value="1000">1000m</SelectItem>
-                                        <SelectItem value="1500">1500m</SelectItem>
-                                        <SelectItem value="2000">2000m</SelectItem>
-                                        <SelectItem value="3000">2500m</SelectItem>
-                                        <SelectItem value="4000">3000m</SelectItem>
+                                        {Object.keys(RangeMap).map((r) => (
+                                            <SelectItem key={r} value={r}>
+                                                {r}m
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                             </div>
 
-                            {/* Budget */}
+                            {/* --- 予算 --- */}
                             <div className="space-y-2">
-                                <label className="text-sm text-muted-foreground">Budget</label>
-                                <Select defaultValue="under-1000" onValueChange={setBudget}>
-                                    <SelectTrigger className="w-full bg-input-background border-border/50 rounded-xl h-12">
+                                <label className="text-sm text-muted-foreground">予算</label>
+                                <Select value={budget} onValueChange={(v) => setBudget(v as keyof typeof BudgetMap)}>
+                                    <SelectTrigger className="w-full rounded-xl h-12">
                                         <SelectValue placeholder="Select budget" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="under-1000">1000円以下</SelectItem>
-                                        <SelectItem value="under-2000">2000円以下</SelectItem>
-                                        <SelectItem value="under-3000">3000円以下</SelectItem>
-                                        <SelectItem value="under-4000">4000円以下</SelectItem>
-                                        <SelectItem value="under-5000">5000円以下</SelectItem>
-                                        <SelectItem value="under-10000">10000円以下</SelectItem>
-                                        <SelectItem value="no-designation">おまかせ</SelectItem>
+                                        {Object.entries(BudgetMap).map(([code, label]) => (
+                                            <SelectItem key={code} value={code}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                             </div>
 
-                            {/* Keywords */}
+                            {/* --- ジャンル選択 --- */}
                             <div className="space-y-2">
-                                <label className="text-sm text-muted-foreground">Key Word</label>
+                                <label className="text-sm text-muted-foreground">ジャンル</label>
                                 <div className="flex items-center space-x-2 py-1">
                                     <Checkbox
-                                        id="おまかせ"
-                                        checked={selectedKeywords.length === 0}
-                                        onCheckedChange={() => setSelectedKeywords([])}
+                                        id="omakase"
+                                        checked={selectedGenres.length === 0}
+                                        onCheckedChange={() => setSelectedGenres([])}
                                     />
-                                    <label htmlFor="おまかせ" className="text-sm leading-none">
+                                    <label htmlFor="omakase" className="text-sm">
                                         おまかせ
                                     </label>
                                 </div>
 
-                                {keywordOptions.map((keyword) => (
-                                    <div key={keyword} className="flex items-center space-x-2 py-1">
+                                {Object.entries(GenreLabels).map(([code, label]) => (
+                                    <div key={code} className="flex items-center space-x-2 py-1">
                                         <Checkbox
-                                            id={keyword}
-                                            checked={selectedKeywords.includes(keyword)}
+                                            id={code}
+                                            checked={selectedGenres.includes(code as GenreCode)}
                                             onCheckedChange={() => {
-                                                setSelectedKeywords((prev) =>
-                                                    prev.includes(keyword)
-                                                        ? prev.filter((k) => k !== keyword)
-                                                        : [...prev, keyword]
+                                                const key = code as GenreCode;
+                                                setSelectedGenres((prev) =>
+                                                    prev.includes(key)
+                                                        ? prev.filter((g) => g !== key)
+                                                        : [...prev, key]
                                                 );
                                             }}
                                         />
-                                        <label htmlFor={keyword} className="text-sm leading-none">
-                                            {keyword}
+                                        <label htmlFor={code} className="text-sm leading-none">
+                                            {label}
                                         </label>
                                     </div>
                                 ))}
@@ -160,19 +163,19 @@ export default function FormPage() {
                         </CardContent>
                     </Card>
 
-                    {/* Buttons */}
+                    {/* --- ボタン --- */}
                     <div className="mt-8 space-y-3">
                         <Button
-                            className="w-full h-14 rounded-2xl bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500 hover:from-orange-500 hover:via-pink-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
-                            onClick={handleSearch}
+                            className="w-full h-14 rounded-2xl bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500 text-white shadow-lg hover:scale-[1.02]"
+                            onClick={() => router.push("/PackAnimation")}
                         >
                             条件に合うお店を取得
                         </Button>
 
                         <Button
                             variant="outline"
-                            className="w-full h-14 rounded-2xl border-pink-500 text-pink-600 hover:bg-pink-50 transition-all"
-                            onClick={handleShare}
+                            className="w-full h-14 rounded-2xl border-pink-500 text-pink-600 hover:bg-pink-50"
+                            onClick={() => router.push("/PackAnimation")}
                         >
                             友達と共有
                         </Button>
@@ -184,17 +187,17 @@ export default function FormPage() {
                 <p className="text-sm text-muted-foreground">Powered by Hot Pepper API</p>
             </footer>
 
-            {/* 共有モーダル */}
+            {/* --- 共有モーダル --- */}
             <Dialog open={isShareOpen} onOpenChange={setIsShareOpen}>
                 <DialogContent className="rounded-2xl">
                     <DialogHeader>
                         <DialogTitle>共有方法を選択</DialogTitle>
                     </DialogHeader>
                     <div className="flex flex-col gap-3 mt-4">
-                        <Button onClick={shareToLINE} className="bg-green-500 hover:bg-green-600 text-white">
+                        <Button onClick={shareToLINE} className="bg-green-500 text-white">
                             LINEで共有
                         </Button>
-                        <Button onClick={shareToX} className="bg-black text-white hover:bg-gray-800">
+                        <Button onClick={shareToX} className="bg-black text-white">
                             X（旧Twitter）で共有
                         </Button>
                         <Button variant="outline" onClick={copyToClipboard}>

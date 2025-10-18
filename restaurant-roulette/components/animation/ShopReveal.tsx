@@ -9,10 +9,9 @@ import { Shop, ShopCard } from "../../components/ShopCard"
 
 interface CardRevealProps {
     cards: Shop[]
-    onReset: () => void
 }
 
-export default function ShopReveal({ cards, onReset }: CardRevealProps) {
+export default function ShopReveal({ cards }: CardRevealProps) {
     const [selectedCard, setSelectedCard] = useState<number | null>(null)
     const router = useRouter()
 
@@ -27,8 +26,6 @@ export default function ShopReveal({ cards, onReset }: CardRevealProps) {
         router.push("/vote")
     }
 
-
-
     return (
         <motion.div
             key="shops"
@@ -42,12 +39,8 @@ export default function ShopReveal({ cards, onReset }: CardRevealProps) {
                     animate={{ x: 0, opacity: 1 }}
                     className="font-bold text-3xl text-foreground text-glow"
                 >
-                    {"条件に合う営業中のお店が見つかりました！"}
+                    {"条件に合うお店が見つかりました！"}
                 </motion.h2>
-                <Button onClick={onReset} variant="outline" size="lg">
-                    <RotateCcw className="mr-2 h-5 w-5" />
-                    {"もう一度"}
-                </Button>
             </div>
 
             <div className="flex flex-wrap justify-center gap-6">
