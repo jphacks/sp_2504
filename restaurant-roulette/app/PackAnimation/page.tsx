@@ -6,6 +6,7 @@ import { HotpepperShop } from "../../types/HotpepperShop"
 import { useSearchParams } from "next/navigation";
 import PackOpening from "../../components/animation/PackOpening"
 import { useState, useEffect } from "react"
+import { getOrCreateUserId } from "@/utils/user";
 
 export default function PackAnimation() {
 
@@ -49,8 +50,37 @@ export default function PackAnimation() {
                 setLoading(false);
             }
         };
-
         fetchShops();
+        //DBとの接続。セッション作成、ショップ登録、ユーザー登録
+        const fetchDB = async () => {
+            try{
+                const session = await fetch("/api/create-session", {method: "POST"});
+                const {session_id} = await session.json()
+                shops.forEach(async (shop) => {
+                    await fetch(`/api/register_shop
+                        ?shop_id=${shop.shop_id}
+                        &session_id=${session_id}
+                        &name=${shop.name}
+                        &address=${shop.address}
+                        &genre=${shop.genre}
+                        &distance=${shop.distance}
+                        &budget=${shop.budget}
+                        &open=${shop.open}
+                        &comment=${shop.comment}
+                        &url=${shop.url}
+                        &photo=${shop.photo}
+                        &lat=${shop.lat}
+                        &lng=${shop.lng}`)
+                });
+                const user_id = getOrCreateUserId();
+                await fetch(`/api/register-user?user_id=${user_id}&session_id=${session_id}`);
+            }
+            catch(e: any){
+                console.error(e);
+                setError(e.message || "予期せぬエラー");
+            }
+        }
+        fetchDB();
     }, [searchParams]);
 
     if (loading) return <p>読み込み中...</p>;

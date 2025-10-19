@@ -22,7 +22,8 @@ export class HotpepperServer {
             bugdet: new BudgetRange(500, 1000),
             comment: rawShop.catch,
             url: rawShop.urls.pc,
-            photo: rawShop.photo.pc.l
+            photo: rawShop.photo.pc.l,
+            shop_id: rawShop.id
         }));
         return new HotpepperServer(shops)
     }
@@ -53,7 +54,8 @@ export class HotpepperServer {
             url: rawShop.url,
             photo: rawShop.photo,
             lat: rawShop.location.latitude,
-            lng: rawShop.location.longitude
+            lng: rawShop.location.longitude,
+            shop_id: rawShop.shop_id
         }));
     }
 }

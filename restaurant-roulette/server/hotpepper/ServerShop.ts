@@ -9,6 +9,7 @@ export interface ServerShop {
     comment: string
     url: string
     photo: string
+    shop_id: string
 }
 export interface Location {
     latitude: number

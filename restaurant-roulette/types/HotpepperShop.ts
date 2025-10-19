@@ -13,6 +13,7 @@ export interface HotpepperShop {
   photo: string;        // 画像URL
   lat: number;          // 緯度（Google Maps用）
   lng: number;          // 経度（Google Maps用）
+  shop_id: string;      //DB用
 }
 
 export type BudgetCode =
