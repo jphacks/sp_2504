@@ -1,23 +1,17 @@
+// app/api/create-session/route.ts
 import { supabase } from '@/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const expires_at = searchParams.get('expires_at') ?? null;
-
   const { data, error } = await supabase
     .from('sessions')
-    .insert([
-      {
-        expires_at: expires_at ? new Date(expires_at).toISOString() : null,
-      },
-    ])
+    .insert([{}]) // created_at は DB側で自動設定
     .select()
     .single();
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error || !data) {
+    return NextResponse.json({ error: error?.message ?? 'Failed to create session' }, { status: 500 });
   }
 
-  return NextResponse.json({ session: data }, { status: 200 });
+  return NextResponse.json({ session_id: data.id }, { status: 200 });
 }
