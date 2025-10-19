@@ -9,9 +9,9 @@ import { Button } from "../../components/ui/button"
 import ShopReveal from "../../components/animation/ShopReveal"
 import { HotpepperShop } from "../../types/HotpepperShop"
 
-export default function ShopPackOpening({ initialshops }: []HotpepperShop) {
+export default function ShopPackOpening({ initialshops }: { initialshops: HotpepperShop[] }) {
     const [stage, setStage] = useState<"initial" | "opening" | "revealing">("initial")
-    const [shops] = useState(initialshop)
+    const [shops] = useState(initialshops)
 
     // パーティクル座標
     const [particlePositions, setParticlePositions] = useState<{ x: number, y: number }[]>([])
