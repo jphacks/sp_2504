@@ -46,7 +46,7 @@ export class HotpepperServer {
             name: rawShop.name,
             address: rawShop.address,
             genre: rawShop.genre.toString(),
-            distance: getDistance({ latitude: myLat, longitude: myLng }, { latitude: rawShop.location.latitude, longitude: rawShop.location.longitude }, this.geolibAccuracy).toString(),
+            distance: (getDistance({latitude: myLat, longitude: myLng}, {latitude: rawShop.location.latitude, longitude: rawShop.location.longitude}, this.geolibAccuracy).toString() + "m"),
             budget: rawShop.bugdet.toStringForClient(),
             open: rawShop.openinghoursstring,
             comment: rawShop.comment,
