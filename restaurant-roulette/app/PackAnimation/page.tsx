@@ -5,7 +5,7 @@
 import { HotpepperShop } from "../../types/HotpepperShop"
 import { useSearchParams } from "next/navigation";
 import PackOpening from "../../components/animation/PackOpening"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { getOrCreateUserId } from "@/utils/user";
 import { supabase } from "@/lib/supabase";
 
@@ -83,8 +83,10 @@ export default function PackAnimation() {
     if (error) return <p>エラー: {error}</p>;
 
     return (
-        <main className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-accent/20">
-            <PackOpening initialshops={shops} />
-        </main>
+        <Suspense fallback={<p>読み込み中...</p>}>
+            <main className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-accent/20">
+                <PackOpening initialshops={shops} />
+            </main>
+        </Suspense> 
     )
 }
