@@ -1,28 +1,27 @@
-/*
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "../../lib/supabaseClient";
 import { HotpepperShop } from "../../types/HotpepperShop";
 import { VoteShop } from "../vote//VoteShop";
 import { Button } from "../../components/ui/button";
+import { getOrCreateUserId } from "@/utils/user";
+import { AsyncCallbackSet } from "next/dist/server/lib/async-callback-set";
+import { useSearchParams } from "next/navigation";
 
 export default function GuestVotePage() {
     const [shops, setShops] = useState<HotpepperShop[]>([]);
     const [votedShops, setVotedShops] = useState<Set<number>>(new Set());
     const [submitted, setSubmitted] = useState(false);
-
-    const guestSessionId = crypto.randomUUID(); // Guest識別ID
+    const searchParams = useSearchParams();
 
     // --- Supabaseからお店データ取得 ---
     useEffect(() => {
         const fetchShops = async () => {
-            const { data, error } = await supabase.from("shops").select("*");
-            if (error) {
-                console.error("ショップ取得失敗:", error);
-                return;
+            const data = await fetch(`/api/get-shops?session_id=${searchParams.get("session_id")}`);
+            if (data){
+                const {shops} = await data.json();
+                setShops(shops);
             }
-            if (data) setShops(data);
         };
         fetchShops();
     }, []);
@@ -45,11 +44,9 @@ export default function GuestVotePage() {
         }
 
         try {
-            await supabase.from("votegest").insert({
-                session_id: guestSessionId,
-                votes: Array.from(votedShops),
-                finished_at: new Date()
-            });
+            votedShops.forEach(async (shop) => {
+                await fetch(`/api/vote?user_id=${getOrCreateUserId()}&shop_id=${shops[shop].shop_id}&session_id=`);
+            })
             setSubmitted(true);
         } catch (err) {
             console.error(err);
@@ -105,4 +102,3 @@ export default function GuestVotePage() {
         </div>
     );
 }
-*/
