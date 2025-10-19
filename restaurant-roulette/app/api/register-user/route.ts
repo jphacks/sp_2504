@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     .from('users')
     .insert([
       {
-        id: user_id,
+        user_id: user_id,
         session_id: session_id,
       },
     ])

@@ -6,6 +6,8 @@ import { HotpepperShop } from "../../types/HotpepperShop"
 import { useSearchParams } from "next/navigation";
 import PackOpening from "../../components/animation/PackOpening"
 import { useState, useEffect } from "react"
+import { getOrCreateUserId } from "@/utils/user";
+import { supabase } from "@/lib/supabase";
 
 export default function PackAnimation() {
 
@@ -30,6 +32,9 @@ export default function PackAnimation() {
 
         // APIリクエスト
         const fetchShops = async () => {
+            console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+            console.log('Supabase Key:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
             try {
                 const params = new URLSearchParams({
                     lat,
@@ -42,15 +47,34 @@ export default function PackAnimation() {
                 if (!res.ok) throw new Error("API取得失敗");
                 const data: HotpepperShop[] = await res.json();
                 setShops(data);
+
+                await fetchDB(shops);
             } catch (e: any) {
-                console.error(e);
+                console.error('Supabase error:', error);
                 setError(e.message || "予期せぬエラー");
             } finally {
                 setLoading(false);
             }
         };
-
         fetchShops();
+        //DBとの接続。セッション作成、ショップ登録、ユーザー登録
+        const fetchDB = async (shops: HotpepperShop[]) => {
+            try{
+                const session = await fetch("/api/create-session", {method: "POST"});
+                const { session_id } = await await session.json();
+                console.log(shops);
+                shops.forEach(async (shop) => {
+                    console.log("popopo");
+                    await fetch(`/api/register-shop?shop_id=${shop.shop_id}&session_id=${session_id}&name=${shop.name}&address=${shop.address}&genre=${shop.genre}&distance=${shop.distance}&budget=${shop.budget}&open=${shop.open}&comment=${shop.comment}&url=${shop.url}&photo=${shop.photo}&lat=${shop.lat}&lng=${shop.lng}`, {method: "POST"})
+                });
+                const user_id = getOrCreateUserId();
+                await fetch(`/api/register-user?user_id=${user_id}&session_id=${session_id}`, {method: "POST"});
+            }
+            catch(e: any){
+                console.error(e);
+                setError(e.message || "予期せぬエラー");
+            }
+        }
     }, [searchParams]);
 
     if (loading) return <p>読み込み中...</p>;
