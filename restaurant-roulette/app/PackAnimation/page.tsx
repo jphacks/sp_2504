@@ -15,6 +15,7 @@ export default function PackAnimation() {
     const [shops, setShops] = useState<HotpepperShop[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [sessionId, setSessionId] = useState<string>();
 
     useEffect(() => {
         // クエリパラメータを取得
@@ -62,6 +63,7 @@ export default function PackAnimation() {
             try{
                 const session = await fetch("/api/create-session", {method: "POST"});
                 const { session_id } = await await session.json();
+                localStorage.setItem("session_id", session_id);
                 console.log(shops);
                 shops.forEach(async (shop) => {
                     console.log("popopo");

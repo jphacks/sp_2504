@@ -6,6 +6,7 @@ import { HotpepperShop } from "../../types/HotpepperShop";
 import { VoteShop } from "./VoteShop";
 import { Button } from "../../components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
+import {QRCodeCanvas} from "qrcode.react";
 
 export default function VotePage() {
     const router = useRouter();
@@ -14,11 +15,12 @@ export default function VotePage() {
     const [votedShops, setVotedShops] = useState<Set<number>>(new Set());
     const [isShareOpen, setIsShareOpen] = useState(false);
     const [shareUrl, setShareUrl] = useState("");
+    //const session_id = useState<string>();
 
     // --- 共有ボタン ---
     const handleShare = () => {
-        const uuid = crypto.randomUUID();
-        const url = `${window.location.origin}/share?id=${uuid}`;
+        const sessionId = localStorage.getItem("session_id");
+        const url = `${window.location.origin}/gestvote?session_id=${sessionId}`;
         setShareUrl(url);
         setIsShareOpen(true);
     };
@@ -149,6 +151,9 @@ export default function VotePage() {
                         <Button variant="outline" onClick={copyToClipboard}>
                             URLをコピー
                         </Button>
+                    </div>
+                    <div>
+                        <QRCodeCanvas value={shareUrl} size={256} />
                     </div>
                 </DialogContent>
             </Dialog>
