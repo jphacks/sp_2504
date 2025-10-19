@@ -48,7 +48,7 @@ export default function PackAnimation() {
                 const data: HotpepperShop[] = await res.json();
                 setShops(data);
 
-                await fetchDB(shops);
+                await fetchDB(data);
             } catch (e: any) {
                 console.error('Supabase error:', error);
                 setError(e.message || "予期せぬエラー");
