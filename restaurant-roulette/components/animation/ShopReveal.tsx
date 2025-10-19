@@ -27,6 +27,29 @@ export default function ShopReveal({ cards }: CardRevealProps) {
         router.push("/vote")
     }
 
+    const handleBackToForm = () => {
+        router.push("/FormPage") // フォームページに戻る
+    }
+
+    // cardsが空の場合
+    if (cards.length === 0) {
+        return (
+            <motion.div
+                key="no-shops"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="relative z-10 w-full max-w-6xl text-center"
+            >
+                <h2 className="font-bold text-3xl text-red-500 mb-6">
+                    お店が見つかりませんでした！
+                </h2>
+                <Button size="lg" className="text-lg px-8 py-4" onClick={handleBackToForm}>
+                    フォーム画面へ戻る
+                </Button>
+            </motion.div>
+        )
+    }
+
     return (
         <motion.div
             key="shops"
@@ -38,9 +61,9 @@ export default function ShopReveal({ cards }: CardRevealProps) {
                 <motion.h2
                     initial={{ x: -50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    className="font-bold text-3xl text-foreground text-glow"
+                    className="font-bold text-3xl text-yellow-500 text-glow"
                 >
-                    {"条件に合うお店が見つかりました！"}
+                    {"お店が見つかりました！"}
                 </motion.h2>
             </div>
 
@@ -70,25 +93,9 @@ export default function ShopReveal({ cards }: CardRevealProps) {
                     >
                         <ShopCard {...shop} />
 
-                        {selectedCard === index && (
-                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mt-2 flex justify-center">
-                                <Sparkles className="h-6 w-6 text-primary" />
-                            </motion.div>
-                        )}
-
                     </motion.div>
                 ))}
             </div>
-
-            {selectedCard !== null && (
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mt-8 rounded-xl bg-card p-6 text-center shadow-xl"
-                >
-                    <p className="text-card-foreground text-lg">{"カードをクリックして詳細を確認！"}</p>
-                </motion.div>
-            )}
 
             <div className="mt-12 flex justify-center">
                 <Button

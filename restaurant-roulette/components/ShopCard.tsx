@@ -19,16 +19,23 @@ export function ShopCard({
     lng
 }: HotpepperShop) {
     const genreColors: Record<string, string> = {
+        居酒屋: "bg-amber-600",
+        "ダイニングバー・バル": "bg-rose-500",
+        創作料理: "bg-pink-500",
         和食: "bg-red-500",
         洋食: "bg-blue-500",
+        "イタリアン・フレンチ": "bg-green-500",
         中華: "bg-yellow-500",
-        イタリアン: "bg-green-500",
-        フレンチ: "bg-purple-500",
-        カフェ: "bg-orange-500",
-        居酒屋: "bg-amber-600",
+        "焼肉・ホルモン": "bg-orange-700",
+        韓国料理: "bg-red-400",
+        "アジア・エスニック料理": "bg-lime-500",
+        各国料理: "bg-cyan-500",
+        "カラオケ・パーティ": "bg-purple-500",
+        "バー・カクテル": "bg-indigo-500",
         ラーメン: "bg-red-600",
-        焼肉: "bg-orange-700",
-        寿司: "bg-blue-600",
+        "お好み焼き・もんじゃ": "bg-orange-600",
+        "カフェ・スイーツ": "bg-orange-400",
+        その他グルメ: "bg-gray-500",
     };
 
     return (
