@@ -12,7 +12,7 @@
 
 ## デモ動画
 - **Webアプリ**: [https://funeat.app/](https://funeat.app/) （開発中）  
-- **紹介動画（90秒）**: 準備中
+- **紹介動画（90秒）**: [Google Driveで見る](https://drive.google.com/file/d/1Cgh4D2hvSOh6J31le3IURO8-0C8J_f93/view?usp=sharing)
 
 ---
 
