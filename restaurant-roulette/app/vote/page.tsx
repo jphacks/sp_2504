@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Shop } from "../../components/ShopCard";
+import { HotpepperShop } from "../../types/HotpepperShop";
 import { VoteShop } from "./VoteShop";
 
 export default function VotePage() {
     const router = useRouter();
-    const [shops, setShops] = useState<Shop[]>([]);
+    const [shops, setShops] = useState<HotpepperShop[]>([]);
     const [voteCounts, setVoteCounts] = useState<number[]>([]);
     const [votedShops, setVotedShops] = useState<Set<number>>(new Set());
 
@@ -15,7 +15,7 @@ export default function VotePage() {
         try {
             const storedShops = localStorage.getItem("lotteryShops");
             if (storedShops) {
-                const parsedShops: Shop[] = JSON.parse(storedShops);
+                const parsedShops: HotpepperShop[] = JSON.parse(storedShops);
                 setShops(parsedShops);
                 setVoteCounts(parsedShops.map(() => 0)); // 初期投票数
                 console.log("localStorageからshopsを読み込みました:", parsedShops);

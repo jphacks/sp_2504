@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { RotateCcw, Sparkles } from "lucide-react"
 import { Button } from "../../components/ui/button"
-import { Shop, ShopCard } from "../../components/ShopCard"
+import { ShopCard } from "../../components/ShopCard"
+import { HotpepperShop } from "../../types/HotpepperShop"
 
 interface CardRevealProps {
-    cards: Shop[]
+    cards: HotpepperShop[]
 }
 
 export default function ShopReveal({ cards }: CardRevealProps) {

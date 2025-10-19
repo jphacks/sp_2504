@@ -1,11 +1,12 @@
 //VoteShop.tsx
 
-import { ShopCard, Shop } from "../../components/ShopCard";
+import { ShopCard } from "../../components/ShopCard";
+import { HotpepperShop } from "../../types/HotpepperShop";
 import { Button } from "../../components/ui/button";
 import { Heart } from "lucide-react";
 
 interface VoteShopProps {
-    shop: Shop;
+    shop: HotpepperShop;
     voteCount: number;
     hasVoted: boolean;
     onVote: () => void;
