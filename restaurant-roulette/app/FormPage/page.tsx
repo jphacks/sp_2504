@@ -25,37 +25,9 @@ const RangeMap: Record<string, string> = {
 
 export default function FormPage() {
     const router = useRouter();
-    const [isShareOpen, setIsShareOpen] = useState(false);
-    const [shareUrl, setShareUrl] = useState("");
     const [selectedGenres, setSelectedGenres] = useState<GenreCode[]>([]);
     const [radius, setRadius] = useState("1000");
     const [budget, setBudget] = useState<keyof typeof BudgetMap>("B010"); // 501〜1000円
-
-    // --- 共有ボタン ---
-    const handleShare = () => {
-        const uuid = crypto.randomUUID();
-        const url = `${window.location.origin}/share?id=${uuid}`;
-        setShareUrl(url);
-        setIsShareOpen(true);
-    };
-
-    // --- 共有関連関数 ---
-    const shareToLINE = () => {
-        const text = encodeURIComponent("一緒にお店を決めよう！");
-        const url = encodeURIComponent(shareUrl);
-        window.open(`https://line.me/R/msg/text/?${text}%0A${url}`, "_blank");
-    };
-
-    const shareToX = () => {
-        const text = encodeURIComponent("一緒にお店を選ぼう！");
-        const url = encodeURIComponent(shareUrl);
-        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank");
-    };
-
-    const copyToClipboard = async () => {
-        await navigator.clipboard.writeText(shareUrl);
-        alert("URLをコピーしました！");
-    };
 
     // --- 検索処理 ---
     async function handleSearch() {
@@ -177,14 +149,6 @@ export default function FormPage() {
                         >
                             条件に合うお店を取得
                         </Button>
-
-                        <Button
-                            variant="outline"
-                            className="w-full h-14 rounded-2xl border-pink-500 text-pink-600 hover:bg-pink-50"
-                            onClick={handleShare}
-                        >
-                            友達と共有
-                        </Button>
                     </div>
                 </div>
             </main>
@@ -192,26 +156,6 @@ export default function FormPage() {
             <footer className="py-6 px-4 text-center">
                 <p className="text-sm text-muted-foreground">Powered by Hot Pepper API</p>
             </footer>
-
-            {/* --- 共有モーダル --- */}
-            <Dialog open={isShareOpen} onOpenChange={setIsShareOpen}>
-                <DialogContent className="rounded-2xl">
-                    <DialogHeader>
-                        <DialogTitle>共有方法を選択</DialogTitle>
-                    </DialogHeader>
-                    <div className="flex flex-col gap-3 mt-4">
-                        <Button onClick={shareToLINE} className="bg-green-500 text-white">
-                            LINEで共有
-                        </Button>
-                        <Button onClick={shareToX} className="bg-black text-white">
-                            X（旧Twitter）で共有
-                        </Button>
-                        <Button variant="outline" onClick={copyToClipboard}>
-                            URLをコピー
-                        </Button>
-                    </div>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 }
