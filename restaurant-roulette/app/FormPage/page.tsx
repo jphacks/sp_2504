@@ -93,7 +93,7 @@ export default function FormPage() {
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-pink-50 via-orange-50 to-yellow-50">
             <Header />
 
-            <main className="flex-1 flex items-center justify-center px-4 pb-20">
+            <main className="flex-1 flex items-center justify-center px-4 pb-20 mt-6 md:mt-12">
                 <div className="w-full max-w-md">
                     <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
                         <CardContent className="pt-8 pb-8 px-6 space-y-5">
