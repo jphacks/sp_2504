@@ -1,7 +1,7 @@
 # Funeat - 迷う時間を楽しい食の時間に
 
 <div align="center">
-  <img src="no_image.png" alt="Funeat Logo" width="400">
+  <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/753d9ff4-54d0-43de-b6e3-5963823de030" />
 
   [![JPHacks 2025](https://img.shields.io/badge/JPHacks%202025-飲食店選択×Tech-orange)](https://github.com/jphacks/choice-tech)
 
