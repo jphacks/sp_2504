@@ -9,19 +9,17 @@ export async function POST(req: NextRequest) {
   const user_id = searchParams.get('user_id');
   const shop_id = searchParams.get('shop_id');
   const session_id = searchParams.get('session_id');
-  const weight = Number(searchParams.get('weight'));
 
   // 手動バリデーション
   if (
-    !user_id || !shop_id || !session_id ||
-    isNaN(weight) || weight <= 0
+    !user_id || !shop_id || !session_id
   ) {
     return NextResponse.json({ error: 'Invalid query parameters' }, { status: 400 });
   }
 
   const { data, error } = await supabase
     .from('votes')
-    .insert([{ user_id, shop_id, session_id, weight }]);
+    .insert([{ user_id, shop_id, session_id }]);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
