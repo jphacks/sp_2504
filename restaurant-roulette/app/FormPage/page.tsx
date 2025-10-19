@@ -58,32 +58,36 @@ export default function FormPage() {
     };
 
     // --- 検索処理 ---
-    const handleSearch = async () => {
+    async function handleSearch() {
         if (!navigator.geolocation) {
             alert("このブラウザでは位置情報が利用できません。");
             return;
         }
 
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
+        try {
+            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject);
+            });
 
-                const query = new URLSearchParams({
-                    lat: latitude.toString(),
-                    lng: longitude.toString(),
-                    range: RangeMap[radius],
-                    budget,
-                    genre: selectedGenres.join(","),
-                });
+            const { latitude, longitude } = position.coords;
 
-                router.push(`/PackAnimation?${query.toString()}`);
-            },
-            (error) => {
-                console.error(error);
-                alert("位置情報を取得できませんでした。");
-            }
-        );
-    };
+            const query = new URLSearchParams({
+                lat: latitude.toString(),
+                lng: longitude.toString(),
+                range: RangeMap[radius],
+                budget,
+                genre: selectedGenres.join(","),
+            });
+
+            router.push(`/PackAnimation?${query.toString()}`);
+        } catch (error: any) {
+            if (error.code === 1) alert("位置情報の使用が拒否されました。");
+            else if (error.code === 2) alert("位置情報が取得できませんでした。");
+            else if (error.code === 3) alert("位置情報の取得がタイムアウトしました。");
+            else alert("位置情報エラーが発生しました。");
+            console.error(error);
+        }
+    }
 
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-pink-50 via-orange-50 to-yellow-50">
@@ -169,7 +173,7 @@ export default function FormPage() {
                     <div className="mt-8 space-y-3">
                         <Button
                             className="w-full h-14 rounded-2xl bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500 text-white shadow-lg hover:scale-[1.02]"
-                            onClick={() => router.push("/PackAnimation")}
+                            onClick={handleSearch}
                         >
                             条件に合うお店を取得
                         </Button>
@@ -177,7 +181,7 @@ export default function FormPage() {
                         <Button
                             variant="outline"
                             className="w-full h-14 rounded-2xl border-pink-500 text-pink-600 hover:bg-pink-50"
-                            onClick={handleSearch}
+                            onClick={handleShare}
                         >
                             友達と共有
                         </Button>

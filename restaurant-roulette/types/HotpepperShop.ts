@@ -18,7 +18,9 @@ export interface HotpepperShop {
 export type BudgetCode =
   | "B009" | "B010" | "B011" | "B001" | "B002"
   | "B003" | "B008" | "B004" | "B005" | "B006"
-  | "B012" | "B013" | "B014"; 
+  | "B012" | "B013" | "B014";
+
+
 export const BudgetMap: Record<BudgetCode, string> = {
   B009: "～500円",
   B010: "501～1000円",

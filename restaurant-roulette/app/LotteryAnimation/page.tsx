@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Shop } from "../../components/ShopCard";
+import { HotpepperShop } from "../../types/HotpepperShop";
 import { CardLottery } from "../../components/animation/CardLottery"
 
 export default function LotteryAnimationPage() {
     const router = useRouter();
-    const [shops, setShops] = useState<Shop[]>([]);
+    const [shops, setShops] = useState<HotpepperShop[]>([]);
     const [votes, setVotes] = useState<number[]>([]);
 
     useEffect(() => {

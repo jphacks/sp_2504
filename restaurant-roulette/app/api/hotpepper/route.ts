@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 
         //条件に適合した候補が10より多かったら、ランダムに取得する
         const dto = hotpepperserver.toClientDTO(Number(lat), Number(lng));
-        const limitedDto = dto.length > 10 ? shuffle(dto).slice(0,10) : dto;
+        const limitedDto = dto.length > 10 ? shuffle(dto).slice(0, 10) : dto;
         return NextResponse.json(limitedDto); //最終的に返すJSONレスポンスを作るところ
     }
     catch (error) { //ネットワークエラーや構文エラーをひろう。500番台のステータスコードでサーバー関連のエラーであることを通知する。

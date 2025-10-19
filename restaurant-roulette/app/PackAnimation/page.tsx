@@ -1,3 +1,5 @@
+"use client";
+
 //app/PackAnimation/page.tsx
 
 import { HotpepperShop } from "../../types/HotpepperShop"
