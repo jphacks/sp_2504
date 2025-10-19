@@ -67,16 +67,12 @@
 ## 開発技術
 ### 活用した技術
 #### API・データ
-* 
+* Hot Pepper Gourmet Search API
 * 
 
 #### フレームワーク・ライブラリ・モジュール
-* 
-* 
-
-#### デバイス
-* 
-* 
+* React / Next.js / TailWind CSS / shadcn-ui / Framer Motion / geolib
+* Supabase / Supabase Realtime
 
 ### 独自技術
 #### ハッカソンで開発した独自機能・技術
