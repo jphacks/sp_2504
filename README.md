@@ -11,7 +11,7 @@
 ---
 
 ## デモ動画
-- **Webアプリ**:https://[sp-2504.vercel.app/ ](https://sp-2504.vercel.app/) (デモが使えます。QRコードを読み取って複数投票ができます)  
+- **Webアプリ**:[https://sp-2504.vercel.app/](https://sp-2504.vercel.app/) (デモが使えます。QRコードを読み取って複数投票ができます)  
 - **紹介動画
 - **: [Google Driveで見る](https://drive.google.com/file/d/1Cgh4D2hvSOh6J31le3IURO8-0C8J_f93/view?usp=sharing)
 - **: [Youtubeで見る](https://www.youtube.com/watch?v=0V42B1Cv62s)
